@@ -1,0 +1,21 @@
+{
+    "name": "inspira/console",
+    "description": "PHP console component.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Inspira\\Console\\": "."
+        }
+    },
+    "authors": [
+        {
+            "name": "Ronald Lambino",
+            "email": "50892397+nadlambino@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "inspira/container": "dev-master"
+    }
+}
