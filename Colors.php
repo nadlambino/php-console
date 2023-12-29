@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Inspira\Console\Enums;
+namespace Inspira\Console;
 
 enum Colors: string
 {
