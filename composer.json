@@ -16,6 +16,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "inspira/container": "dev-master"
+        "inspira/container": "dev-master",
+        "inspira/utils": "dev-master"
     }
 }
