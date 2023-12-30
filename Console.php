@@ -23,15 +23,17 @@ class Console
 	 * Console constructor.
 	 *
 	 * @param Container $container The container instance for dependency injection.
-	 * @param Input     $input     The input instance for handling command input.
-	 * @param Output    $output    The output instance for displaying command output.
+	 * @param Input $input The input instance for handling command input.
+	 * @param Output $output The output instance for displaying command output.
 	 */
-	public function __construct(public Container $container, protected Input $input, protected Output $output) { }
+	public function __construct(public Container $container, protected Input $input, protected Output $output)
+	{
+	}
 
 	/**
 	 * Register a console command.
 	 *
-	 * @param string         $name    The name of the command.
+	 * @param string $name The name of the command.
 	 * @param string|Closure $command The class or closure representing the command.
 	 *
 	 * @return $this
@@ -130,8 +132,8 @@ class Console
 	/**
 	 * Validate required parameters for a class command.
 	 *
-	 * @param string $command    The class name of the command.
-	 * @param array  $parameters The array of command parameters.
+	 * @param string $command The class name of the command.
+	 * @param array $parameters The array of command parameters.
 	 *
 	 * @return void
 	 */
