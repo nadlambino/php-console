@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Inspira\Console;
 
+use Inspira\Console\Enums\Colors;
+
 class Output
 {
 	/**

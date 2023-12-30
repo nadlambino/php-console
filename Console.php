@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Inspira\Console;
 
 use Closure;
-use Throwable;
-use ReflectionClass;
+use Inspira\Console\Commands\CommandInterface;
 use Inspira\Container\Container;
+use ReflectionClass;
+use Throwable;
 
 class Console
 {

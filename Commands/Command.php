@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Inspira\Console;
+namespace Inspira\Console\Commands;
+
+use Inspira\Console\Input;
+use Inspira\Console\Output;
 
 abstract class Command implements CommandInterface
 {

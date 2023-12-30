@@ -42,7 +42,7 @@ class Input
 		return $_SERVER['argv'][1] ?? null;
 	}
 
-	public function setArguments(): array
+	public function setArguments(): void
 	{
 		$arguments = array_splice($_SERVER['argv'], 2);
 
@@ -52,8 +52,6 @@ class Input
 		}
 
 		$this->arguments = $options ?? [];
-
-		return $this->arguments;
 	}
 
 	public function getCommandProperties(string|Closure $implementation): array
