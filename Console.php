@@ -10,10 +10,32 @@ use Inspira\Container\Container;
 use ReflectionClass;
 use Throwable;
 
+/**
+ * Class Console
+ *
+ * The main class for handling console commands.
+ *
+ * @package Inspira\Console
+ */
 class Console
 {
+	/**
+	 * Console constructor.
+	 *
+	 * @param Container $container The container instance for dependency injection.
+	 * @param Input     $input     The input instance for handling command input.
+	 * @param Output    $output    The output instance for displaying command output.
+	 */
 	public function __construct(public Container $container, protected Input $input, protected Output $output) { }
 
+	/**
+	 * Register a console command.
+	 *
+	 * @param string         $name    The name of the command.
+	 * @param string|Closure $command The class or closure representing the command.
+	 *
+	 * @return $this
+	 */
 	public function command(string $name, string|Closure $command): static
 	{
 		$this->input->addCommand($name, $command);
@@ -21,6 +43,11 @@ class Console
 		return $this;
 	}
 
+	/**
+	 * Run the console application.
+	 *
+	 * @return void
+	 */
 	public function run(): void
 	{
 		$this->validateCommand();
@@ -55,6 +82,11 @@ class Console
 	}
 
 	/**
+	 * Handle closure or callable commands.
+	 *
+	 * @param Closure|string $class The closure or callable class representing the command.
+	 *
+	 * @return void
 	 * @throws
 	 */
 	private function handleClosure(Closure|string $class): void
@@ -65,6 +97,11 @@ class Console
 		}
 	}
 
+	/**
+	 * Get an array of all available commands.
+	 *
+	 * @return array
+	 */
 	private function getAllAvailableCommands(): array
 	{
 		foreach ($this->input->getCommands() as $name => $implementation) {
@@ -76,6 +113,11 @@ class Console
 		return $commands ?? [];
 	}
 
+	/**
+	 * Validate if a command is specified; if not, display available commands.
+	 *
+	 * @return void
+	 */
 	private function validateCommand(): void
 	{
 		if (is_null($this->input->getCommandName())) {
@@ -85,6 +127,14 @@ class Console
 		}
 	}
 
+	/**
+	 * Validate required parameters for a class command.
+	 *
+	 * @param string $command    The class name of the command.
+	 * @param array  $parameters The array of command parameters.
+	 *
+	 * @return void
+	 */
 	private function validateRequires(string $command, array $parameters): void
 	{
 		try {
