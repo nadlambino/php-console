@@ -30,7 +30,7 @@ class Console
 		$command = $this->input->getCommands($name);
 
 		if (empty($command)) {
-			$this->output->error('Unknown command "' . $name . '". Did you register this command?');
+			$this->output->error("Unknown command [$name]. Did you register this command?");
 		}
 
 		// This will handle commands that were registered as closure
@@ -45,7 +45,7 @@ class Console
 			$reflection = new ReflectionClass($command);
 
 			if (!$reflection->implementsInterface(CommandInterface::class)) {
-				$this->output->error('Command must be an instance of "' . CommandInterface::class . '"');
+				$this->output->error(sprintf('Command must be an instance of [%s].', CommandInterface::class));
 			}
 
 			$this->container->resolve($command, 'run');
@@ -54,6 +54,9 @@ class Console
 		}
 	}
 
+	/**
+	 * @throws
+	 */
 	private function handleClosure(Closure|string $class): void
 	{
 		if ($class instanceof Closure || is_callable($class)) {
@@ -76,9 +79,9 @@ class Console
 	private function validateCommand(): void
 	{
 		if (is_null($this->input->getCommandName())) {
-			$this->output->info('Inspira\'s available commands', false);
+			$this->output->info("Inspira's available commands.", false);
 			$this->output->table($this->getAllAvailableCommands(), 27);
-			exit();
+			exit(0);
 		}
 	}
 
@@ -93,7 +96,7 @@ class Console
 			if (!empty($requires) && $missing = array_diff($requires, $parameterNames)) {
 				$names = trimplode(', ', array_map(fn($values) => '"' . $values . '"', $missing));
 				$label = count($missing) <= 1 ? 'parameter' : 'parameters';
-				$this->output->error("Missing required $label $names");
+				$this->output->error("Missing required $label: [$names]");
 			}
 		} catch (Throwable $exception) {
 			$this->output->error($exception->getMessage());
