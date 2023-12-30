@@ -6,14 +6,29 @@ namespace Inspira\Console;
 
 use Inspira\Console\Enums\Colors;
 
+/**
+ * Class Output
+ *
+ * Handles console output and formatting.
+ *
+ * @package Inspira\Console
+ */
 class Output
 {
 	/**
-	 * The max count of ansi color characters
-	 * This is used to be added in the str_pad width
+	 * The max count of ANSI color characters.
+	 * This is used to be added in the str_pad width.
 	 */
 	const ANSI_CHAR_COUNT = 9;
 
+	/**
+	 * Display a success message with optional exit.
+	 *
+	 * @param string $message The success message.
+	 * @param bool $exit Whether to exit after displaying the message.
+	 *
+	 * @return void
+	 */
 	public function success(string $message, bool $exit = true): void
 	{
 		echo $this->colorize($message, Colors::GREEN) . PHP_EOL;
@@ -23,6 +38,14 @@ class Output
 		}
 	}
 
+	/**
+	 * Display an info message with optional exit.
+	 *
+	 * @param string $message The info message.
+	 * @param bool $exit Whether to exit after displaying the message.
+	 *
+	 * @return void
+	 */
 	public function info(string $message, bool $exit = true): void
 	{
 		echo $this->colorize($message, Colors::BLUE) . PHP_EOL;
@@ -32,6 +55,14 @@ class Output
 		}
 	}
 
+	/**
+	 * Display a warning message with optional exit.
+	 *
+	 * @param string $message The warning message.
+	 * @param bool $exit Whether to exit after displaying the message.
+	 *
+	 * @return void
+	 */
 	public function warning(string $message, bool $exit = true): void
 	{
 		echo $this->colorize($message, Colors::YELLOW) . PHP_EOL;
@@ -41,6 +72,14 @@ class Output
 		}
 	}
 
+	/**
+	 * Display an error message with optional exit.
+	 *
+	 * @param string $message The error message.
+	 * @param bool $exit Whether to exit after displaying the message.
+	 *
+	 * @return void
+	 */
 	public function error(string $message, bool $exit = true): void
 	{
 		echo $this->colorize($message, Colors::RED) . PHP_EOL;
@@ -50,6 +89,14 @@ class Output
 		}
 	}
 
+	/**
+	 * Apply ANSI color to a message.
+	 *
+	 * @param string $message The message to colorize.
+	 * @param Colors|string $ansiColor The ANSI color to apply.
+	 *
+	 * @return string The colorized message.
+	 */
 	public function colorize(string $message, Colors|string $ansiColor): string
 	{
 		$color = $ansiColor instanceof Colors ? $ansiColor->value : $ansiColor;
@@ -57,6 +104,14 @@ class Output
 		return $color . $message . Colors::BASE->value;
 	}
 
+	/**
+	 * Display a table with formatted data.
+	 *
+	 * @param array $data The data to display in the table.
+	 * @param int $spacing The spacing between columns.
+	 *
+	 * @return void
+	 */
 	public function table(array $data, int $spacing = 20): void
 	{
 		$columns = array_keys($data[0]);
