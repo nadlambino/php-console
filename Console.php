@@ -112,7 +112,10 @@ class Console
 			$commands[] = $command;
 		}
 
-		return $commands ?? [];
+		$commands = $commands ?? [];
+		sort($commands);
+
+		return $commands;
 	}
 
 	/**
