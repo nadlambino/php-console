@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Inspira\Console\Output;
+namespace Inspira\Console;
 
 use Inspira\Console\Components\Table;
 use Inspira\Console\Enums\Color;
+use Inspira\Console\Styles\Styles;
 
 /**
  * Class Output

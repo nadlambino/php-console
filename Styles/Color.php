@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Inspira\Console\Output;
+namespace Inspira\Console\Styles;
 
 use Inspira\Console\Enums\Color as ColorEnum;
 
