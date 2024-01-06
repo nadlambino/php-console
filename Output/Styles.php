@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspira\Console\Output;
 
 use Inspira\Console\Enums\Color as ColorEnum;

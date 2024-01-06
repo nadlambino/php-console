@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Inspira\Console\Enums;
 
+/**
+ * Enum Color
+ *
+ * Represents color options for console output using ANSI escape codes.
+ *
+ * @package Inspira\Console\Enums
+ */
 enum Color: int
 {
 	case BLACK = 0;
