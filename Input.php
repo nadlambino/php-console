@@ -97,12 +97,12 @@ class Input
 				continue;
 			}
 
-			[$name, $value] = explode('=', $argument);
-			$name = preg_replace('/^(--|-)/', '', $name, 1);
-			$options[$name] = $value ?? true;
+			$options = explode('=', $argument);
+			$name = preg_replace('/^(--|-)/', '', $options[0], 1);
+			$params[$name] = $options[1] ?? true;
 		}
 
-		$this->arguments = $options ?? [];
+		$this->arguments = $params ?? [];
 	}
 
 	/**
