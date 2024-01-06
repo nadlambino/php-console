@@ -127,7 +127,11 @@ class Console
 	{
 		if (is_null($this->input->getCommandName())) {
 			$this->output->info("Available commands.", false);
-			$this->output->table($this->getAllAvailableCommands(), 27);
+			if (empty($commands = $this->getAllAvailableCommands())) {
+				$this->output->warning("No available commands.");
+			}
+
+			$this->output->table($commands, 27);
 			exit(0);
 		}
 	}

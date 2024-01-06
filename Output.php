@@ -115,7 +115,7 @@ class Output
 	public function table(array $data, int $spacing = 20): void
 	{
 		if (empty($data)) {
-			$this->warning("No available commands.");
+			return;
 		}
 
 		$columns = array_keys($data[0]);
