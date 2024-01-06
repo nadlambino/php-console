@@ -131,9 +131,9 @@ class Input
 			$optionals = $reflection->getProperty('optionals');
 
 			return [
-				'description' => $description->getDefaultValue(),
-				'requires' => trimplode(', ', $requires->getDefaultValue()),
-				'optionals' => trimplode(', ', $optionals->getDefaultValue()),
+				'description' => empty($value = $description->getDefaultValue()) ? '-' : $value,
+				'requires' => empty($value = trimplode(', ', $requires->getDefaultValue())) ? '-' : $value,
+				'optionals' => empty($value = trimplode(', ', $optionals->getDefaultValue())) ? '-' : $value,
 			];
 		} catch (Throwable) {
 			return $default;
