@@ -25,13 +25,13 @@ final class Table implements ComponentInterface
 	 * @param Output $output The output instance for writing to the console.
 	 * @param array $data The tabular data to be displayed in the table.
 	 * @param int $padding The padding to be applied to each column in the table.
-	 * @param int $coloredPadding The padding to be applied in colored headers.
+	 * @param int $headerPadding The padding to be applied in headers.
 	 */
 	public function __construct(
 		protected Output $output,
 		protected array  $data,
 		protected int    $padding = 3,
-		protected int    $coloredPadding = 4
+		protected int    $headerPadding = 4
 	)
 	{
 		$this->prependHeaders($this->getHeaders())
@@ -126,7 +126,7 @@ final class Table implements ComponentInterface
 	{
 		foreach (array_keys($this->columnWidths) as $column) {
 			$coloredColumn = $this->output->colorize(ucwords($column), Colors::GREEN);
-			$width = $this->columnWidths[$column] + strlen(Colors::GREEN->value) + 4;
+			$width = $this->columnWidths[$column] + strlen(Colors::GREEN->value) + $this->headerPadding;
 			$text = str_pad($coloredColumn, $width);
 			$this->output->write($text);
 		}

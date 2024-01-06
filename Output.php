@@ -16,6 +16,14 @@ use Inspira\Console\Enums\Colors;
  */
 class Output
 {
+	/**
+	 * Class constructor for the Output class.
+	 *
+	 * This constructor initializes the Output instance with an optional stream.
+	 * If the provided stream is not a valid resource, it defaults to STDOUT (standard output).
+	 *
+	 * @param resource|null $stream An optional stream resource for output. Defaults to STDOUT if not provided or invalid.
+	 */
 	public function __construct(protected mixed $stream = null)
 	{
 		if (!is_resource($this->stream)) {
@@ -33,7 +41,8 @@ class Output
 	 */
 	public function success(string $message, bool $exit = true): void
 	{
-		echo $this->colorize($message, Colors::GREEN) . PHP_EOL;
+		$text = $this->colorize($message, Colors::GREEN);
+		$this->writeln($text);
 
 		if ($exit) {
 			exit(0);
@@ -50,7 +59,8 @@ class Output
 	 */
 	public function info(string $message, bool $exit = true): void
 	{
-		echo $this->colorize($message, Colors::BLUE) . PHP_EOL;
+		$text = $this->colorize($message, Colors::BLUE);
+		$this->writeln($text);
 
 		if ($exit) {
 			exit(0);
@@ -67,7 +77,8 @@ class Output
 	 */
 	public function warning(string $message, bool $exit = true): void
 	{
-		echo $this->colorize($message, Colors::YELLOW) . PHP_EOL;
+		$text = $this->colorize($message, Colors::YELLOW);
+		$this->writeln($text);
 
 		if ($exit) {
 			exit(2);
@@ -84,13 +95,21 @@ class Output
 	 */
 	public function error(string $message, bool $exit = true): void
 	{
-		echo $this->colorize($message, Colors::RED) . PHP_EOL;
+		$text = $this->colorize($message, Colors::RED);
+		$this->writeln($text);
 
 		if ($exit) {
 			exit(1);
 		}
 	}
 
+	/**
+	 * Write text to the output stream.
+	 *
+	 * @param string $text The text to be written.
+	 *
+	 * @return $this
+	 */
 	public function write(string $text): self
 	{
 		fwrite($this->stream, $text);
@@ -98,6 +117,13 @@ class Output
 		return $this;
 	}
 
+	/**
+	 * Write a line of text to the output stream with a newline character.
+	 *
+	 * @param string $text The text to be written.
+	 *
+	 * @return static
+	 */
 	public function writeln(string $text): static
 	{
 		fwrite($this->stream, $text . PHP_EOL);
@@ -105,6 +131,11 @@ class Output
 		return $this;
 	}
 
+	/**
+	 * Write a newline character to the output stream.
+	 *
+	 * @return $this
+	 */
 	public function eol(): self
 	{
 		fwrite($this->stream, PHP_EOL);
@@ -128,15 +159,18 @@ class Output
 	}
 
 	/**
-	 * Display a table with formatted data.
+	 * Display a table in the console.
 	 *
-	 * @param array $data The data to display in the table.
-	 * @param int $padding The spacing between columns.
+	 * This method creates a new Table instance, initializes it with the provided data and padding,
+	 * and then renders the table to the console using the render method of the Table class.
 	 *
+	 * @param array $data The tabular data to be displayed in the table.
+	 * @param int $padding The padding to be applied to each column in the table. Defaults to 3.
+	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults ti 4.
 	 * @return void
 	 */
-	public function table(array $data, int $padding = 3): void
+	public function table(array $data, int $padding = 3, int $headerPadding = 4): void
 	{
-		(new Table($this, $data, $padding))->render();
+		(new Table($this, $data, $padding, $headerPadding))->render();
 	}
 }
