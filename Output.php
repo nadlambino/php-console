@@ -16,12 +16,6 @@ use Inspira\Console\Enums\Colors;
  */
 class Output
 {
-	/**
-	 * The max count of ANSI color characters.
-	 * This is used to be added in the str_pad width.
-	 */
-	const ANSI_CHAR_COUNT = 9;
-
 	public function __construct(protected mixed $stream = null)
 	{
 		if (!is_resource($this->stream)) {
@@ -143,10 +137,6 @@ class Output
 	 */
 	public function table(array $data, int $padding = 3): void
 	{
-		if (empty($data)) {
-			return;
-		}
-
 		(new Table($this, $data, $padding))->render();
 	}
 }
