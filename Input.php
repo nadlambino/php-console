@@ -93,8 +93,13 @@ class Input
 		$arguments = array_splice($_SERVER['argv'], 2);
 
 		foreach ($arguments as $argument) {
-			$opt = explode('=', $argument);
-			$options[$opt[0]] = $opt[1] ?? true;
+			if (!str_starts_with($argument, '-')) {
+				continue;
+			}
+
+			[$name, $value] = explode('=', $argument);
+			$name = preg_replace('/^(--|-)/', '', $name, 1);
+			$options[$name] = $value ?? true;
 		}
 
 		$this->arguments = $options ?? [];
