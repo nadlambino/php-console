@@ -126,7 +126,7 @@ class Console
 	private function validateCommand(): void
 	{
 		if (is_null($this->input->getCommandName())) {
-			$this->output->info("Inspira's available commands.", false);
+			$this->output->info("Available commands.", false);
 			$this->output->table($this->getAllAvailableCommands(), 27);
 			exit(0);
 		}
