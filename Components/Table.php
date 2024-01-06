@@ -17,6 +17,8 @@ use Inspira\Console\Output;
  */
 final class Table implements ComponentInterface
 {
+	protected array $columnWidths = [];
+
 	/**
 	 * Table constructor.
 	 *
@@ -32,6 +34,9 @@ final class Table implements ComponentInterface
 		protected int    $coloredPadding = 4
 	)
 	{
+		$this->prependHeaders($this->getHeaders())
+			->setColumnWidths()
+			->removeHeaders();
 	}
 
 	/**
@@ -43,16 +48,7 @@ final class Table implements ComponentInterface
 	 */
 	public function render(): void
 	{
-		if (empty($this->data)) {
-			return;
-		}
-
-		$headers = $this->getHeaders();
-		$columnWidths = $this->appendHeaders($headers)->getColumnWidths();
-
-		$this->removeHeaders()
-			->printHeaders($columnWidths)
-			->printBody($columnWidths);
+		$this->printHeaders()->printBody();
 	}
 
 	/**
@@ -81,7 +77,7 @@ final class Table implements ComponentInterface
 	 *
 	 * @return $this
 	 */
-	protected function appendHeaders(array $headers): self
+	protected function prependHeaders(array $headers): self
 	{
 		array_unshift($this->data, $headers);
 
@@ -102,39 +98,35 @@ final class Table implements ComponentInterface
 	}
 
 	/**
-	 * Get the longest character count for each column in the table data.
+	 * Set the width to be applied for each column by getting the longest character count of each column.
 	 * The data should also include the headers to properly align the headers when printing out.
 	 *
-	 * @return array The widths of each column.
+	 * @return $this
 	 */
-	protected function getColumnWidths(): array
+	protected function setColumnWidths(): self
 	{
-		$widths = [];
-
 		foreach ($this->data as $row) {
 			foreach ($row as $column => $value) {
 				$length = strlen($value);
-				if (!isset($widths[$column]) || $length > $widths[$column]) {
-					$widths[$column] = $length + $this->padding;
+				if (!isset($this->columnWidths[$column]) || $length > $this->columnWidths[$column]) {
+					$this->columnWidths[$column] = $length + $this->padding;
 				}
 			}
 		}
 
-		return $widths;
+		return $this;
 	}
 
 	/**
 	 * Print the headers to the console with proper formatting and coloring.
 	 *
-	 * @param array $columnWidths The widths of each column.
-	 *
 	 * @return $this
 	 */
-	protected function printHeaders(array $columnWidths): self
+	protected function printHeaders(): self
 	{
-		foreach (array_keys($columnWidths) as $column) {
+		foreach (array_keys($this->columnWidths) as $column) {
 			$coloredColumn = $this->output->colorize(ucwords($column), Colors::GREEN);
-			$width = $columnWidths[$column] + strlen(Colors::GREEN->value) + 4;
+			$width = $this->columnWidths[$column] + strlen(Colors::GREEN->value) + 4;
 			$text = str_pad($coloredColumn, $width);
 			$this->output->write($text);
 		}
@@ -146,15 +138,13 @@ final class Table implements ComponentInterface
 	/**
 	 * Print the body of the table to the console.
 	 *
-	 * @param array $columnWidths The widths of each column.
-	 *
 	 * @return $this
 	 */
-	protected function printBody(array $columnWidths): self
+	protected function printBody(): self
 	{
 		foreach ($this->data as $row) {
 			foreach ($row as $column => $value) {
-				$text = str_pad($value, $columnWidths[$column]);
+				$text = str_pad($value, $this->columnWidths[$column]);
 				$this->output->write($text);
 			}
 			$this->output->eol();
