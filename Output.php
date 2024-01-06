@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspira\Console;
 
+use Inspira\Console\Components\Table;
 use Inspira\Console\Enums\Colors;
 
 /**
@@ -20,6 +21,13 @@ class Output
 	 * This is used to be added in the str_pad width.
 	 */
 	const ANSI_CHAR_COUNT = 9;
+
+	public function __construct(protected mixed $stream = null)
+	{
+		if (!is_resource($this->stream)) {
+			$this->stream = STDOUT;
+		}
+	}
 
 	/**
 	 * Display a success message with optional exit.
@@ -89,6 +97,27 @@ class Output
 		}
 	}
 
+	public function write(string $text): self
+	{
+		fwrite($this->stream, $text);
+
+		return $this;
+	}
+
+	public function writeln(string $text): static
+	{
+		fwrite($this->stream, $text . PHP_EOL);
+
+		return $this;
+	}
+
+	public function eol(): self
+	{
+		fwrite($this->stream, PHP_EOL);
+
+		return $this;
+	}
+
 	/**
 	 * Apply ANSI color to a message.
 	 *
@@ -108,42 +137,16 @@ class Output
 	 * Display a table with formatted data.
 	 *
 	 * @param array $data The data to display in the table.
-	 * @param int $spacing The spacing between columns.
+	 * @param int $padding The spacing between columns.
 	 *
 	 * @return void
 	 */
-	public function table(array $data, int $spacing = 20): void
+	public function table(array $data, int $padding = 3): void
 	{
 		if (empty($data)) {
 			return;
 		}
 
-		$columns = array_keys($data[0]);
-		$widths = [];
-
-		$headers = [];
-		foreach ($columns as $column) {
-			$headers[$column] = ucwords($column);
-		}
-
-		array_unshift($data, $headers);
-
-		foreach ($columns as $column) {
-			$widths[$column] = max(array_map('strlen', [$column])) + $spacing;
-		}
-
-		foreach ($data as $dataIndex => $row) {
-			foreach ($columns as $columnIndex => $column) {
-				$raw = $row[$column] ?? '';
-				$value = $dataIndex === 0 ? $this->colorize($raw, Colors::BLUE) : $raw;
-				$value = $columnIndex === 0 ? $this->colorize($value, Colors::GREEN) : $value;
-				$value = empty($value) ? '-' : $value;
-				$width = $dataIndex === 0 ? $widths[$column] + self::ANSI_CHAR_COUNT : $widths[$column];
-
-				echo str_pad($value, $width);
-			}
-
-			echo PHP_EOL;
-		}
+		(new Table($this, $data, $padding))->render();
 	}
 }

@@ -131,7 +131,7 @@ class Console
 				$this->output->warning("No available commands.");
 			}
 
-			$this->output->table($commands, 27);
+			$this->output->table($commands);
 			exit(0);
 		}
 	}
