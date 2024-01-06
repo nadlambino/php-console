@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console\Commands;
 
 use Inspira\Console\Input;
-use Inspira\Console\Output;
+use Inspira\Console\Output\Output;
 
 /**
  * Class Command

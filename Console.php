@@ -6,6 +6,7 @@ namespace Inspira\Console;
 
 use Closure;
 use Inspira\Console\Commands\CommandInterface;
+use Inspira\Console\Output\Output;
 use Inspira\Container\Container;
 use ReflectionClass;
 use Throwable;

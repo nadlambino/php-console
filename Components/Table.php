@@ -6,7 +6,7 @@ namespace Inspira\Console\Components;
 
 use Inspira\Console\Contracts\ComponentInterface;
 use Inspira\Console\Enums\Colors;
-use Inspira\Console\Output;
+use Inspira\Console\Output\Output;
 
 /**
  * Class Table

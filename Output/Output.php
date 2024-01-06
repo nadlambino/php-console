@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Inspira\Console;
+namespace Inspira\Console\Output;
 
 use Inspira\Console\Components\Table;
 use Inspira\Console\Enums\Colors;
