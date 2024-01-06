@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console\Output;
 
 use Inspira\Console\Components\Table;
-use Inspira\Console\Enums\Colors;
+use Inspira\Console\Enums\Color;
 
 /**
  * Class Output
@@ -24,11 +24,13 @@ class Output
 	 *
 	 * @param resource|null $stream An optional stream resource for output. Defaults to STDOUT if not provided or invalid.
 	 */
-	public function __construct(protected mixed $stream = null)
+	public function __construct(protected mixed $stream = null, public ?Styles $styles = null)
 	{
 		if (!is_resource($this->stream)) {
 			$this->stream = STDOUT;
 		}
+
+		$this->styles ??= new Styles();
 	}
 
 	/**
@@ -41,7 +43,7 @@ class Output
 	 */
 	public function success(string $message, bool $exit = true): void
 	{
-		$text = $this->colorize($message, Colors::GREEN);
+		$text = $this->colorize($message, Color::GREEN, true);
 		$this->writeln($text);
 
 		if ($exit) {
@@ -59,7 +61,7 @@ class Output
 	 */
 	public function info(string $message, bool $exit = true): void
 	{
-		$text = $this->colorize($message, Colors::BLUE);
+		$text = $this->colorize($message, Color::BLUE, true);
 		$this->writeln($text);
 
 		if ($exit) {
@@ -77,7 +79,7 @@ class Output
 	 */
 	public function warning(string $message, bool $exit = true): void
 	{
-		$text = $this->colorize($message, Colors::YELLOW);
+		$text = $this->colorize($message, Color::YELLOW);
 		$this->writeln($text);
 
 		if ($exit) {
@@ -95,7 +97,7 @@ class Output
 	 */
 	public function error(string $message, bool $exit = true): void
 	{
-		$text = $this->colorize($message, Colors::RED);
+		$text = $this->colorize($message, Color::RED);
 		$this->writeln($text);
 
 		if ($exit) {
@@ -147,15 +149,13 @@ class Output
 	 * Apply ANSI color to a message.
 	 *
 	 * @param string $message The message to colorize.
-	 * @param Colors|string $ansiColor The ANSI color to apply.
-	 *
+	 * @param Color $color The ANSI color code.
+	 * @param bool $isBright Whether to use ANSI bright color.
 	 * @return string The colorized message.
 	 */
-	public function colorize(string $message, Colors|string $ansiColor): string
+	public function colorize(string $message, Color $color, bool $isBright = false): string
 	{
-		$color = $ansiColor instanceof Colors ? $ansiColor->value : $ansiColor;
-
-		return $color . $message . Colors::BASE->value;
+		return $this->styles->reset()->foreground($color, $isBright)->apply($message);
 	}
 
 	/**
@@ -169,7 +169,7 @@ class Output
 	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults ti 4.
 	 * @return void
 	 */
-	public function table(array $data, int $padding = 3, int $headerPadding = 4): void
+	public function table(array $data, int $padding = 3, int $headerPadding = 9): void
 	{
 		(new Table($this, $data, $padding, $headerPadding))->render();
 	}

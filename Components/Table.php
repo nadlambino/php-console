@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console\Components;
 
 use Inspira\Console\Contracts\ComponentInterface;
-use Inspira\Console\Enums\Colors;
+use Inspira\Console\Enums\Color;
 use Inspira\Console\Output\Output;
 
 /**
@@ -31,7 +31,7 @@ final class Table implements ComponentInterface
 		protected Output $output,
 		protected array  $data,
 		protected int    $padding = 3,
-		protected int    $headerPadding = 4
+		protected int    $headerPadding = 9
 	)
 	{
 		$this->prependHeaders($this->getHeaders())
@@ -125,8 +125,8 @@ final class Table implements ComponentInterface
 	protected function printHeaders(): self
 	{
 		foreach (array_keys($this->columnWidths) as $column) {
-			$coloredColumn = $this->output->colorize(ucwords($column), Colors::GREEN);
-			$width = $this->columnWidths[$column] + strlen(Colors::GREEN->value) + $this->headerPadding;
+			$coloredColumn = $this->output->colorize(ucwords($column), Color::GREEN);
+			$width = $this->columnWidths[$column] + $this->headerPadding;
 			$text = str_pad($coloredColumn, $width);
 			$this->output->write($text);
 		}

@@ -2,6 +2,8 @@
 
 namespace Inspira\Console\Output;
 
+use Inspira\Console\Enums\Color as ColorEnum;
+
 class Styles
 {
 	protected const ESC = "\033";
@@ -18,24 +20,24 @@ class Styles
 
 	protected array $colors = [];
 
-	public function __construct(protected string $text, protected ?Color $fgColor = null, protected ?Color $bgColor = null)
+	public function __construct(protected ?string $text = null, protected ?Color $fgColor = null, protected ?Color $bgColor = null)
 	{
 		$this->fgColor ??= new FgColor();
 		$this->bgColor ??= new BgColor();
 	}
 
-	public function foreground(int $colorCode, bool $isBright = false): self
+	public function foreground(ColorEnum $color, bool $isBright = false): self
 	{
-		$color = $isBright ? $this->fgColor->bright() : $this->fgColor;
-		$this->colors[] = $color->color($colorCode);
+		$fg = $isBright ? $this->fgColor->bright() : $this->fgColor->reset();
+		$this->colors[] = $fg->color($color);
 
 		return $this;
 	}
 
-	public function background(int $colorCode, bool $isBright = false): self
+	public function background(ColorEnum $color, bool $isBright = false): self
 	{
-		$color = $isBright ? $this->bgColor->bright() : $this->bgColor;
-		$this->colors[] = $color->color($colorCode);
+		$bg = $isBright ? $this->bgColor->bright() : $this->bgColor->reset();
+		$this->colors[] = $bg->color($color);
 
 		return $this;
 	}
@@ -76,9 +78,11 @@ class Styles
 		return $this;
 	}
 
-	public function apply(): string
+	public function apply(?string $text = null): string
 	{
-		return $this->startStyle() . $this->text . $this->endStyle();
+		$text ??= $this->text;
+
+		return $this->startStyle() . $text . $this->endStyle();
 	}
 
 	private function startStyle(): string

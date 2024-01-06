@@ -2,18 +2,10 @@
 
 namespace Inspira\Console\Output;
 
+use Inspira\Console\Enums\Color as ColorEnum;
+
 abstract class Color
 {
-	public const BLACK = 0;
-	public const RED = 1;
-	public const GREEN = 2;
-	public const YELLOW = 3;
-	public const BLUE = 4;
-	public const MAGENTA = 5;
-	public const CYAN = 6;
-	public const WHITE = 7;
-	public const DEFAULT = 9;
-
 	protected bool $isBright = false;
 
 	public function bright(): static
@@ -23,10 +15,17 @@ abstract class Color
 		return $this;
 	}
 
-	public function color(int $colorCode): string
+	public function color(ColorEnum $color): string
 	{
 		$brightness = $this->isBright ? static::BRIGHT : static::NORMAL;
 
-		return $brightness . $colorCode;
+		return $brightness . $color->value;
+	}
+
+	public function reset(): static
+	{
+		$this->isBright = false;
+
+		return $this;
 	}
 }
