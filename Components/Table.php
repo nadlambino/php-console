@@ -15,9 +15,32 @@ use Inspira\Console\Output;
  *
  * @package Inspira\Console\Components
  */
-final class Table implements ComponentInterface
+class Table implements ComponentInterface
 {
+	/**
+	 * @var array<string, int> The count of the longest characters for each column.
+	 */
 	protected array $columnWidths = [];
+
+	/**
+	 * @var string The table caption.
+	 */
+	protected string $caption = '';
+
+	/**
+	 * @var int The caption text color based on ANSI 256.
+	 */
+	private int $captionFg = 231;
+
+	/**
+	 * @var int The caption background color based on ANSI 256.
+	 */
+	private int $captionBg = 33;
+
+	/**
+	 * @var int The caption alignment.
+	 */
+	private int $captionAlignment = STR_PAD_BOTH;
 
 	/**
 	 * Table constructor.
@@ -40,6 +63,30 @@ final class Table implements ComponentInterface
 	}
 
 	/**
+	 * Table caption.
+	 *
+	 * @param string $caption The caption.
+	 * @param int $alignment The caption alignment. Accepted values are 0, 1, or 2, or STR_PAD_LEFT, STR_PAD_RIGHT, or STR_PAD_BOTH.
+	 * @param int $fgColor The caption text color based from ANSI 256 (0 - 255).
+	 * @param int $bgColor The caption background color based from ANSI 256 (0 - 255).
+	 * @return $this
+	 */
+	public function caption(string $caption, int $alignment = STR_PAD_BOTH, int $fgColor = 231, int $bgColor = 33): static
+	{
+		$acceptedAlignments = [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH];
+		if (!in_array($alignment, $acceptedAlignments)) {
+			$this->output->error("Invalid alignment, accepted values are 0, 1, or 2, or STR_PAD_LEFT, STR_PAD_RIGHT, or STR_PAD_BOTH");
+		}
+
+		$this->caption = $caption;
+		$this->captionFg = $fgColor;
+		$this->captionBg = $bgColor;
+		$this->captionAlignment = $alignment;
+
+		return $this;
+	}
+
+	/**
 	 * Render the table by printing headers and body to the console.
 	 *
 	 * If the data is empty, no output will be generated.
@@ -48,7 +95,9 @@ final class Table implements ComponentInterface
 	 */
 	public function render(): void
 	{
-		$this->printHeaders()->printBody();
+		$this->printCaption()
+			->printHeaders()
+			->printBody();
 	}
 
 	/**
@@ -77,7 +126,7 @@ final class Table implements ComponentInterface
 	 *
 	 * @return $this
 	 */
-	protected function prependHeaders(array $headers): self
+	protected function prependHeaders(array $headers): static
 	{
 		array_unshift($this->data, $headers);
 
@@ -90,7 +139,7 @@ final class Table implements ComponentInterface
 	 *
 	 * @return $this
 	 */
-	protected function removeHeaders(): self
+	protected function removeHeaders(): static
 	{
 		array_shift($this->data);
 
@@ -103,7 +152,7 @@ final class Table implements ComponentInterface
 	 *
 	 * @return $this
 	 */
-	protected function setColumnWidths(): self
+	protected function setColumnWidths(): static
 	{
 		foreach ($this->data as $row) {
 			foreach ($row as $column => $value) {
@@ -118,11 +167,39 @@ final class Table implements ComponentInterface
 	}
 
 	/**
+	 * Print the caption to the console with proper formatting and coloring.
+	 *
+	 * @return $this
+	 */
+	protected function printCaption(): static
+	{
+		$this->output->eol();
+		if (empty($this->caption)) {
+			return $this;
+		}
+
+		$widths = array_values($this->columnWidths);
+		$totalWidth = array_sum($widths);
+		$paddedCaption = str_pad($this->caption, $totalWidth, ' ', $this->captionAlignment);
+		$styledCaption = $this
+			->output
+			->styles
+			->bold()
+			->fgPalette($this->captionFg)
+			->bgPalette($this->captionBg)
+			->apply($paddedCaption);
+
+		$this->output->writeln($styledCaption);
+
+		return $this;
+	}
+
+	/**
 	 * Print the headers to the console with proper formatting and coloring.
 	 *
 	 * @return $this
 	 */
-	protected function printHeaders(): self
+	protected function printHeaders(): static
 	{
 		foreach (array_keys($this->columnWidths) as $column) {
 			$coloredColumn = $this->output->colorize(ucwords($column), Color::GREEN);
@@ -140,7 +217,7 @@ final class Table implements ComponentInterface
 	 *
 	 * @return $this
 	 */
-	protected function printBody(): self
+	protected function printBody(): static
 	{
 		foreach ($this->data as $row) {
 			foreach ($row as $column => $value) {
@@ -149,6 +226,7 @@ final class Table implements ComponentInterface
 			}
 			$this->output->eol();
 		}
+		$this->output->eol();
 
 		return $this;
 	}

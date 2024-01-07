@@ -167,12 +167,13 @@ class Output
 	 * and then renders the table to the console using the render method of the Table class.
 	 *
 	 * @param array $data The tabular data to be displayed in the table.
+	 * @param string $caption The table caption.
 	 * @param int $padding The padding to be applied to each column in the table. Defaults to 3.
 	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults to 4.
 	 * @return void
 	 */
-	public function table(array $data, int $padding = 3, int $headerPadding = 9): void
+	public function table(array $data, string $caption = '', int $padding = 3, int $headerPadding = 9): void
 	{
-		(new Table($this, $data, $padding, $headerPadding))->render();
+		(new Table($this, $data, $padding, $headerPadding))->caption($caption, 2)->render();
 	}
 }

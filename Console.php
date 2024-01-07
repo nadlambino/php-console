@@ -126,12 +126,11 @@ class Console
 	private function validateCommand(): void
 	{
 		if (is_null($this->input->getCommandName())) {
-			$this->output->info("Available commands.", false);
 			if (empty($commands = $this->getAllAvailableCommands())) {
 				$this->output->warning("No available commands.");
 			}
 
-			$this->output->table($commands);
+			$this->output->table($commands, "Available Commands");
 			exit(0);
 		}
 	}
