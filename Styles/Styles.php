@@ -15,7 +15,7 @@ use Inspira\Console\Contracts\ColorInterface;
  */
 class Styles
 {
-	use Colorable;
+	use Colorable, Formattable;
 
 	/**
 	 * ANSI escape sequence
@@ -86,66 +86,6 @@ class Styles
 	) {
 		$this->fgColor ??= new FgColor();
 		$this->bgColor ??= new BgColor();
-	}
-
-	/**
-	 * Apply bold style to the text.
-	 *
-	 * @return $this
-	 */
-	public function bold(): self
-	{
-		$this->styles[] = self::BOLD;
-
-		return $this;
-	}
-
-	/**
-	 * Apply muted style to the text
-	 *
-	 * @return $this
-	 */
-	public function muted(): self
-	{
-		$this->styles[] = self::MUTED;
-
-		return $this;
-	}
-
-	/**
-	 * Apply italic style to the text.
-	 *
-	 * @return $this
-	 */
-	public function italic(): self
-	{
-		$this->styles[] = self::ITALIC;
-
-		return $this;
-	}
-
-	/**
-	 * Apply underlined style to the text.
-	 *
-	 * @return $this
-	 */
-	public function underlined(): self
-	{
-		$this->styles[] = self::UNDERLINED;
-
-		return $this;
-	}
-
-	/**
-	 * Apply invert style to the text (swap foreground and background colors).
-	 *
-	 * @return $this
-	 */
-	public function invert(): self
-	{
-		$this->styles[] = self::INVERT;
-
-		return $this;
 	}
 
 	/**

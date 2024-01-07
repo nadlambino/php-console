@@ -39,6 +39,8 @@ trait Colorable
 	 *
 	 * @param int $color  The color code between 0 - 255.
 	 * @return static  Returns the current instance for method chaining.
+	 *
+	 * @link https://en.wikipedia.org/wiki/ANSI_escape_code
 	 */
 	public function fgPalette(int $color): static
 	{
@@ -54,6 +56,8 @@ trait Colorable
 	 * @param int $green  Green component (between 0 - 255).
 	 * @param int $blue  Blue component (between 0 - 255).
 	 * @return static  Returns the current instance for method chaining.
+	 *
+	 * @link https://en.wikipedia.org/wiki/ANSI_escape_code
 	 */
 	public function fgRgb(int $red, int $green, int $blue): static
 	{
