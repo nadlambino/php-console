@@ -156,7 +156,7 @@ class Output
 	 */
 	public function colorize(string $message, Color $color, bool $isBright = false): string
 	{
-		return $this->styles->reset()->foreground($color, $isBright)->apply($message);
+		return $this->styles->reset()->fgColor($color, $isBright)->apply($message);
 	}
 
 	/**

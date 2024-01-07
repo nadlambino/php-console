@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Inspira\Console\Styles;
 
-use Inspira\Console\Enums\Color as ColorEnum;
+use Inspira\Console\Contracts\ColorInterface;
 
 /**
  * Class Styles
@@ -15,6 +15,8 @@ use Inspira\Console\Enums\Color as ColorEnum;
  */
 class Styles
 {
+	use Colorable;
+
 	/**
 	 * ANSI escape sequence
 	 */
@@ -74,48 +76,16 @@ class Styles
 	 * Styles constructor.
 	 *
 	 * @param string|null $text     The text to apply styles to.
-	 * @param Color|null  $fgColor  The foreground color.
-	 * @param Color|null  $bgColor  The background color.
+	 * @param ColorInterface|null  $fgColor  The foreground color.
+	 * @param ColorInterface|null  $bgColor  The background color.
 	 */
 	public function __construct(
 		protected ?string $text = null,
-		protected ?Color $fgColor = null,
-		protected ?Color $bgColor = null
+		protected ?ColorInterface $fgColor = null,
+		protected ?ColorInterface $bgColor = null
 	) {
 		$this->fgColor ??= new FgColor();
 		$this->bgColor ??= new BgColor();
-	}
-
-	/**
-	 * Set the foreground color for the text.
-	 *
-	 * @param ColorEnum $color     The foreground color.
-	 * @param bool      $isBright  Whether to use the bright version of the color.
-	 *
-	 * @return $this
-	 */
-	public function foreground(ColorEnum $color, bool $isBright = false): self
-	{
-		$fg = $isBright ? $this->fgColor->bright() : $this->fgColor->reset();
-		$this->colors[] = $fg->color($color);
-
-		return $this;
-	}
-
-	/**
-	 * Set the background color for the text.
-	 *
-	 * @param ColorEnum $color     The background color.
-	 * @param bool      $isBright  Whether to use the bright version of the color.
-	 *
-	 * @return $this
-	 */
-	public function background(ColorEnum $color, bool $isBright = false): self
-	{
-		$bg = $isBright ? $this->bgColor->bright() : $this->bgColor->reset();
-		$this->colors[] = $bg->color($color);
-
-		return $this;
 	}
 
 	/**
