@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console\Styles;
 
 use Inspira\Console\Contracts\ColorInterface;
+use Inspira\Console\Contracts\StylesInterface;
 
 /**
  * Class Styles
@@ -13,7 +14,7 @@ use Inspira\Console\Contracts\ColorInterface;
  *
  * @package Inspira\Console\Output
  */
-class Styles
+class Styles implements StylesInterface
 {
 	use Colorable, Formattable;
 
@@ -91,9 +92,9 @@ class Styles
 	/**
 	 * Reset all styles and colors.
 	 *
-	 * @return $this
+	 * @return Styles
 	 */
-	public function reset(): self
+	public function reset(): static
 	{
 		$this->styles = [];
 		$this->colors = [];

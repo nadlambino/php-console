@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console;
 
 use Inspira\Console\Components\Table;
+use Inspira\Console\Contracts\StylesInterface;
 use Inspira\Console\Enums\Color;
 use Inspira\Console\Styles\Styles;
 
@@ -25,7 +26,7 @@ class Output
 	 *
 	 * @param resource|null $stream An optional stream resource for output. Defaults to STDOUT if not provided or invalid.
 	 */
-	public function __construct(protected mixed $stream = null, public ?Styles $styles = null)
+	public function __construct(protected mixed $stream = null, public ?StylesInterface $styles = null)
 	{
 		if (!is_resource($this->stream)) {
 			$this->stream = STDOUT;
