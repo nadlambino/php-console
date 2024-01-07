@@ -168,7 +168,7 @@ class Output
 	 *
 	 * @param array $data The tabular data to be displayed in the table.
 	 * @param int $padding The padding to be applied to each column in the table. Defaults to 3.
-	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults ti 4.
+	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults to 4.
 	 * @return void
 	 */
 	public function table(array $data, int $padding = 3, int $headerPadding = 9): void
