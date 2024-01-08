@@ -126,7 +126,6 @@ trait Spacing
 		extract($this->paddings);
 
 		$text = $this->text;
-		$addedNonZeroSpace = 1;
 
 		// Apply left padding
 		$text = str_pad($text, strlen($text) + $left, ' ', STR_PAD_LEFT);
@@ -135,7 +134,7 @@ trait Spacing
 		$padded = str_pad($text, strlen($text) + $right, ' ', STR_PAD_RIGHT);
 
 		// Create top padding
-		$textLength = strlen($padded) + $addedNonZeroSpace;
+		$textLength = strlen($padded);
 		$topLine = str_repeat(" ", $textLength) . PHP_EOL;
 		$topPadding = str_repeat($topLine, $top);
 
@@ -143,7 +142,7 @@ trait Spacing
 		$bottomLine = PHP_EOL . str_repeat(" ", $textLength);
 		$bottomPadding = str_repeat($bottomLine, $bottom);
 
-		$this->text = $topPadding . $padded . self::NON_ZERO_SPACE . $bottomPadding;
+		$this->text = $topPadding . $padded . $bottomPadding;
 
 		return $this;
 	}
