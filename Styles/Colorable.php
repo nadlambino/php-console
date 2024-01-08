@@ -138,6 +138,30 @@ trait Colorable
 	}
 
 	/**
+	 * Set the background color based on different color representations.
+	 *
+	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
+	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
+	 * @return static
+	 */
+	public function bgColorize(Color|int|array $color, bool $isBright = false): static
+	{
+		if ($color instanceof Color) {
+			return $this->bgColor($color, $isBright);
+		}
+
+		if (is_int($color)) {
+			return $this->bgPalette($color);
+		}
+
+		if (count($color) !== 3) {
+			throw new InvalidArgumentException("Please provide an array of [red, green, blue] colors based on ANSI 256.");
+		}
+
+		return $this->bgRgb(...$color);
+	}
+
+	/**
 	 * Reset colors.
 	 *
 	 * @return static

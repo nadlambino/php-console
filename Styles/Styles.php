@@ -80,6 +80,16 @@ class Styles implements StylesInterface
 	}
 
 	/**
+	 * Make new style.
+	 *
+	 * @return static
+	 */
+	public static function make(): static
+	{
+		return (new static());
+	}
+
+	/**
 	 * Reset all styles and colors.
 	 *
 	 * @return Styles
