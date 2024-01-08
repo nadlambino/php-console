@@ -41,27 +41,32 @@ class Styles implements StylesInterface
 	/**
 	 * ANSI bold code
 	 */
-	public const BOLD = 1;
+	protected const BOLD = 1;
 
 	/**
 	 * ANSI muted code
 	 */
-	public const MUTED = 2;
+	protected const MUTED = 2;
 
 	/**
 	 * ANSI italic code
 	 */
-	public const ITALIC = 3;
+	protected const ITALIC = 3;
 
 	/**
 	 * ANSI underlined code
 	 */
-	public const UNDERLINED = 4;
+	protected const UNDERLINED = 4;
 
 	/**
 	 * ANSI invert code
 	 */
-	public const INVERT = 7;
+	protected const INVERT = 7;
+
+	/**
+	 * Non-zero space ANSI code.
+	 */
+	protected const NON_ZERO_SPACE = "\u{200B}";
 
 	/**
 	 * Styles constructor.
