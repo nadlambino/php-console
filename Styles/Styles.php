@@ -16,7 +16,7 @@ use Inspira\Console\Contracts\StylesInterface;
  */
 class Styles implements StylesInterface
 {
-	use Colorable, Formattable, Spacing, Deferrable;
+	use Colorable, Formattable, Spacing;
 
 	/**
 	 * ANSI escape sequence
@@ -74,11 +74,6 @@ class Styles implements StylesInterface
 	protected array $colors = [];
 
 	/**
-	 * @var bool Determine whether a method is deferred or not.
-	 */
-	protected bool $isDeferred = true;
-
-	/**
 	 * Styles constructor.
 	 *
 	 * @param string|null $text     The text to apply styles to.
@@ -117,10 +112,7 @@ class Styles implements StylesInterface
 	public function apply(?string $text = null): string
 	{
 		$this->text = $text ?? $this->text;
-
-		$this->isDeferred = false;
-		$this->runDeferredMethods();
-		$this->isDeferred = true;
+		$this->applyPaddings();
 
 		return $this->startStyle() . $this->text . $this->endStyle();
 	}

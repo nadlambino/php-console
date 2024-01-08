@@ -15,6 +15,16 @@ namespace Inspira\Console\Styles;
 trait Spacing
 {
 	/**
+	 * @var array Associative array containing padding values for different directions.
+	 */
+	protected array $paddings = [
+		'top' => 0,
+		'right' => 0,
+		'bottom' => 0,
+		'left' => 0
+	];
+
+	/**
 	 * Add padding to the left side of the text.
 	 *
 	 * @param int $padding The number of spaces to add to the left side of the text.
@@ -23,11 +33,7 @@ trait Spacing
 	 */
 	public function paddingLeft(int $padding): static
 	{
-		if ($this->shouldSpacingMethodsDeferred()) {
-			return $this->defer(func_get_args());
-		}
-
-		$this->text = str_pad($this->text, strlen($this->text) + $padding, ' ', STR_PAD_LEFT);
+		$this->paddings['left'] = $padding;
 
 		return $this;
 	}
@@ -41,11 +47,7 @@ trait Spacing
 	 */
 	public function paddingRight(int $padding): static
 	{
-		if ($this->shouldSpacingMethodsDeferred()) {
-			return $this->defer(func_get_args());
-		}
-
-		$this->text = str_pad($this->text, strlen($this->text) + $padding, ' ', STR_PAD_RIGHT);
+		$this->paddings['right'] = $padding;
 
 		return $this;
 	}
@@ -59,22 +61,87 @@ trait Spacing
 	 */
 	public function paddingX(int $padding): static
 	{
-		if ($this->shouldSpacingMethodsDeferred()) {
-			return $this->defer(func_get_args());
-		}
-
-		$this->text = str_pad($this->text, strlen($this->text) + $padding, ' ', STR_PAD_BOTH);
+		$this->paddings['left'] = $padding;
+		$this->paddings['right'] = $padding;
 
 		return $this;
 	}
 
 	/**
-	 * Check whether spacing methods should be deferred based on the isDeferred property and text content.
+	 * Add padding to the top of the text.
 	 *
-	 * @return bool Returns true if spacing methods should be deferred; otherwise, false.
+	 * Note: The Y axis padding (top and bottom) uses a new line as padding.
+	 *
+	 * @param int $padding The number of empty lines to add to the top of the text.
+	 *
+	 * @return static Returns an instance of the class for method chaining.
 	 */
-	protected function shouldSpacingMethodsDeferred(): bool
+	public function paddingTop(int $padding): static
 	{
-		return $this->isDeferred === true || empty($this->text);
+		$this->paddings['top'] = $padding;
+
+		return $this;
+	}
+
+	/**
+	 * Add padding to the bottom of the text.
+	 *
+	 * Note: The Y axis padding (top and bottom) uses a new line as padding.
+	 *
+	 * @param int $padding The number of empty lines to add to the bottom of the text.
+	 *
+	 * @return static Returns an instance of the class for method chaining.
+	 */
+	public function paddingBottom(int $padding): static
+	{
+		$this->paddings['bottom'] = $padding;
+
+		return $this;
+	}
+
+	/**
+	 * Add padding to both the top and bottom of the text.
+	 *
+	 * Note: The Y axis padding (top and bottom) uses a new line as padding.
+	 *
+	 * @param int $padding The number of empty lines to add to both the top and bottom of the text.
+	 *
+	 * @return static Returns an instance of the class for method chaining.
+	 */
+	public function paddingY(int $padding): static
+	{
+		$this->paddings['top'] = $padding;
+		$this->paddings['bottom'] = $padding;
+
+		return $this;
+	}
+
+	/**
+	 * Apply the defined paddings to the text.
+	 *
+	 * @return static Returns an instance of the class for method chaining.
+	 */
+	public function applyPaddings(): static
+	{
+		extract($this->paddings);
+
+		$text = $this->text;
+
+		// Apply left and right padding
+		$text = str_pad($text, strlen($text) + $left, ' ', STR_PAD_LEFT);
+		$text = str_pad($text, strlen($text) + $right, ' ', STR_PAD_RIGHT);
+
+		// Apply top padding
+		$textLength = strlen($text);
+		$topLine = str_repeat(" ", $textLength) . PHP_EOL;
+		$text = str_repeat($topLine, $top) . $text;
+
+		// Apply bottom padding
+		$bottomLine = PHP_EOL . str_repeat(" ", $textLength);
+		$text .= str_repeat($bottomLine, $bottom);
+
+		$this->text = $text;
+
+		return $this;
 	}
 }
