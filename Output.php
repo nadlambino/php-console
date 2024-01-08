@@ -19,6 +19,11 @@ use Inspira\Console\Styles\Styles;
 class Output
 {
 	/**
+	 * Clear screen and cursor reposition ANSI codes.
+	 */
+	protected const CLEAR_SCREEN = "\033[2J\033[H";
+
+	/**
 	 * Class constructor for the Output class.
 	 *
 	 * This constructor initializes the Output instance with an optional stream.
@@ -143,6 +148,18 @@ class Output
 	public function eol(): self
 	{
 		fwrite($this->stream, PHP_EOL);
+
+		return $this;
+	}
+
+	/**
+	 * Clear the console screen and reposition the cursor to top left.
+	 *
+	 * @return static
+	 */
+	public function clear(): static
+	{
+		$this->writeln(self::CLEAR_SCREEN);
 
 		return $this;
 	}

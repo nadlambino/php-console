@@ -7,6 +7,10 @@ namespace Inspira\Console;
 use Closure;
 use Inspira\Console\Commands\CommandInterface;
 use Inspira\Container\Container;
+use Inspira\Container\Exceptions\NonInstantiableBindingException;
+use Inspira\Container\Exceptions\UnresolvableBindingException;
+use Inspira\Container\Exceptions\UnresolvableBuiltInTypeException;
+use Inspira\Container\Exceptions\UnresolvableMissingTypeException;
 use ReflectionClass;
 use Throwable;
 
@@ -46,9 +50,25 @@ class Console
 	}
 
 	/**
+	 * Clear the console screen.
+	 *
+	 * @return static
+	 */
+	public function clear(): static
+	{
+		$this->output->clear();
+
+		return $this;
+	}
+
+	/**
 	 * Run the console application.
 	 *
 	 * @return void
+	 * @throws NonInstantiableBindingException
+	 * @throws UnresolvableBindingException
+	 * @throws UnresolvableBuiltInTypeException
+	 * @throws UnresolvableMissingTypeException
 	 */
 	public function run(): void
 	{
@@ -87,9 +107,11 @@ class Console
 	 * Handle closure or callable commands.
 	 *
 	 * @param Closure|string $class The closure or callable class representing the command.
-	 *
 	 * @return void
-	 * @throws
+	 * @throws NonInstantiableBindingException
+	 * @throws UnresolvableBindingException
+	 * @throws UnresolvableBuiltInTypeException
+	 * @throws UnresolvableMissingTypeException
 	 */
 	private function handleClosure(Closure|string $class): void
 	{
