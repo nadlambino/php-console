@@ -57,11 +57,10 @@ abstract class Color implements ColorInterface
 	 * Get the ANSI escape code for a custom color from the palette.
 	 *
 	 * @param int $color The color code between 0 - 255.
-	 * @param bool $isBackground Whether it is a background color.
 	 * @return string The ANSI escape code for the specified custom color.
 	 * @throws InvalidArgumentException If an invalid color code is provided.
 	 */
-	public function palette(int $color, bool $isBackground = false): string
+	public function palette(int $color): string
 	{
 		if ($color < 0 || $color > 255) {
 			throw new InvalidArgumentException("Invalid color code, only between 0 - 255 is accepted.");
@@ -80,11 +79,10 @@ abstract class Color implements ColorInterface
 	 * @param int $red Red component (between 0 - 255).
 	 * @param int $green Green component (between 0 - 255).
 	 * @param int $blue Blue component (between 0 - 255).
-	 * @param bool $isBackground Whether it is a background color.
 	 * @return string The ANSI escape code for the specified RGB color.
 	 * @throws InvalidArgumentException If an invalid color code is provided.
 	 */
-	public function rgb(int $red, int $green, int $blue, bool $isBackground = false): string
+	public function rgb(int $red, int $green, int $blue): string
 	{
 		if (
 			$red < 0 || $red > 255 ||

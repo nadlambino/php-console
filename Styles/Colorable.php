@@ -44,7 +44,7 @@ trait Colorable
 	 */
 	public function fgPalette(int $color): static
 	{
-		$this->colors[] = $this->fgColor->palette($color, false);
+		$this->colors[] = $this->fgColor->palette($color);
 
 		return $this;
 	}
@@ -61,7 +61,7 @@ trait Colorable
 	 */
 	public function fgRgb(int $red, int $green, int $blue): static
 	{
-		$this->colors[] = $this->fgColor->rgb($red, $green, $blue, false);
+		$this->colors[] = $this->fgColor->rgb($red, $green, $blue);
 
 		return $this;
 	}
@@ -88,7 +88,7 @@ trait Colorable
 	 */
 	public function bgPalette(int $color): static
 	{
-		$this->colors[] = $this->bgColor->palette($color, false);
+		$this->colors[] = $this->bgColor->palette($color);
 
 		return $this;
 	}
@@ -103,7 +103,7 @@ trait Colorable
 	 */
 	public function bgRgb(int $red, int $green, int $blue): static
 	{
-		$this->colors[] = $this->bgColor->rgb($red, $green, $blue, false);
+		$this->colors[] = $this->bgColor->rgb($red, $green, $blue);
 
 		return $this;
 	}
