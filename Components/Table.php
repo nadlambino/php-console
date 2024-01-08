@@ -30,12 +30,12 @@ class Table implements ComponentInterface
 	/**
 	 * @var int The caption text color based on ANSI 256.
 	 */
-	private int $captionFg = 231;
+	private int $captionFg = 0;
 
 	/**
 	 * @var int The caption background color based on ANSI 256.
 	 */
-	private int $captionBg = 33;
+	private int $captionBg = 2;
 
 	/**
 	 * @var int The caption alignment.
@@ -71,7 +71,7 @@ class Table implements ComponentInterface
 	 * @param int $bgColor The caption background color based from ANSI 256 (0 - 255).
 	 * @return $this
 	 */
-	public function caption(string $caption, int $alignment = STR_PAD_BOTH, int $fgColor = 231, int $bgColor = 33): static
+	public function caption(string $caption, int $alignment = STR_PAD_BOTH, int $fgColor = 0, int $bgColor = 2): static
 	{
 		$acceptedAlignments = [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH];
 		if (!in_array($alignment, $acceptedAlignments)) {
@@ -173,7 +173,6 @@ class Table implements ComponentInterface
 	 */
 	protected function printCaption(): static
 	{
-		$this->output->eol();
 		if (empty($this->caption)) {
 			return $this;
 		}
@@ -184,7 +183,6 @@ class Table implements ComponentInterface
 		$styledCaption = $this
 			->output
 			->styles
-			->bold()
 			->fgPalette($this->captionFg)
 			->bgPalette($this->captionBg)
 			->apply($paddedCaption);
@@ -226,7 +224,6 @@ class Table implements ComponentInterface
 			}
 			$this->output->eol();
 		}
-		$this->output->eol();
 
 		return $this;
 	}
