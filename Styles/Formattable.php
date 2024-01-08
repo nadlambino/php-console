@@ -10,19 +10,22 @@ namespace Inspira\Console\Styles;
  * Trait providing methods for formatting texts in a console output.
  * This trait is used only in Styles class. This is just to separate color related methods
  * for better maintainability.
- *
- * @property array $styles
  */
 trait Formattable
 {
 	/**
+	 * @var array Text formats
+	 */
+	protected array $formats = [];
+
+	/**
 	 * Apply bold style to the text.
 	 *
-	 * @return Styles
+	 * @return static
 	 */
 	public function bold(): static
 	{
-		$this->styles[] = self::BOLD;
+		$this->formats[] = self::BOLD;
 
 		return $this;
 	}
@@ -30,11 +33,11 @@ trait Formattable
 	/**
 	 * Apply muted style to the text
 	 *
-	 * @return Styles
+	 * @return static
 	 */
 	public function muted(): static
 	{
-		$this->styles[] = self::MUTED;
+		$this->formats[] = self::MUTED;
 
 		return $this;
 	}
@@ -42,11 +45,11 @@ trait Formattable
 	/**
 	 * Apply italic style to the text.
 	 *
-	 * @return Styles
+	 * @return static
 	 */
 	public function italic(): static
 	{
-		$this->styles[] = self::ITALIC;
+		$this->formats[] = self::ITALIC;
 
 		return $this;
 	}
@@ -54,11 +57,11 @@ trait Formattable
 	/**
 	 * Apply underlined style to the text.
 	 *
-	 * @return Styles
+	 * @return static
 	 */
 	public function underlined(): static
 	{
-		$this->styles[] = self::UNDERLINED;
+		$this->formats[] = self::UNDERLINED;
 
 		return $this;
 	}
@@ -66,11 +69,23 @@ trait Formattable
 	/**
 	 * Apply invert style to the text (swap foreground and background colors).
 	 *
-	 * @return Styles
+	 * @return static
 	 */
 	public function invert(): static
 	{
-		$this->styles[] = self::INVERT;
+		$this->formats[] = self::INVERT;
+
+		return $this;
+	}
+
+	/**
+	 * Reset formatting.
+	 *
+	 * @return static
+	 */
+	protected function resetFormats(): static
+	{
+		$this->formats = [];
 
 		return $this;
 	}

@@ -151,13 +151,13 @@ class Output
 	 * Apply ANSI color to a message.
 	 *
 	 * @param string $message The message to colorize.
-	 * @param Color $color The ANSI color code.
+	 * @param Color|int|array $color The ANSI color code.
 	 * @param bool $isBright Whether to use ANSI bright color.
 	 * @return string The colorized message.
 	 */
-	public function colorize(string $message, Color $color, bool $isBright = false): string
+	public function colorize(string $message, Color|int|array $color, bool $isBright = false): string
 	{
-		return $this->styles->reset()->fgColor($color, $isBright)->apply($message);
+		return $this->styles->reset()->fgColorize($color, $isBright)->apply($message);
 	}
 
 	/**

@@ -6,6 +6,7 @@ namespace Inspira\Console\Styles;
 
 use Inspira\Console\Contracts\ColorInterface;
 use Inspira\Console\Enums\Color;
+use InvalidArgumentException;
 
 /**
  * Trait Colorable
@@ -16,10 +17,14 @@ use Inspira\Console\Enums\Color;
  *
  * @property ColorInterface $fgColor  The foreground color instance.
  * @property ColorInterface $bgColor  The background color instance.
- * @property array $colors  Array to store ANSI escape codes for colors.
  */
 trait Colorable
 {
+	/**
+	 * @var array Text fg and bg colors
+	 */
+	protected array $colors = [];
+
 	/**
 	 * Set the foreground color using the specified color and brightness.
 	 *
@@ -67,6 +72,30 @@ trait Colorable
 	}
 
 	/**
+	 * Set the foreground color based on different color representations.
+	 *
+	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
+	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
+	 * @return static
+	 */
+	public function fgColorize(Color|int|array $color, bool $isBright = false): static
+	{
+		if ($color instanceof Color) {
+			return $this->fgColor($color, $isBright);
+		}
+
+		if (is_int($color)) {
+			return $this->fgPalette($color);
+		}
+
+		if (count($color) !== 3) {
+			throw new InvalidArgumentException("Please provide an array of [red, green, blue] colors based on ANSI 256.");
+		}
+
+		return $this->fgRgb(...$color);
+	}
+
+	/**
 	 * Set the background color using the specified color and brightness.
 	 *
 	 * @param Color $color  The background color enumeration.
@@ -104,6 +133,18 @@ trait Colorable
 	public function bgRgb(int $red, int $green, int $blue): static
 	{
 		$this->colors[] = $this->bgColor->rgb($red, $green, $blue);
+
+		return $this;
+	}
+
+	/**
+	 * Reset colors.
+	 *
+	 * @return static
+	 */
+	protected function resetColors(): static
+	{
+		$this->colors = [];
 
 		return $this;
 	}

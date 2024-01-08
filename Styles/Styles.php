@@ -64,16 +64,6 @@ class Styles implements StylesInterface
 	public const INVERT = 7;
 
 	/**
-	 * @var array Text styles
-	 */
-	protected array $styles = [];
-
-	/**
-	 * @var array Text fg and bg colors
-	 */
-	protected array $colors = [];
-
-	/**
 	 * Styles constructor.
 	 *
 	 * @param string|null $text     The text to apply styles to.
@@ -96,8 +86,9 @@ class Styles implements StylesInterface
 	 */
 	public function reset(): static
 	{
-		$this->styles = [];
-		$this->colors = [];
+		$this->resetFormats()
+			->resetColors()
+			->resetPaddings();
 
 		return $this;
 	}
@@ -105,16 +96,22 @@ class Styles implements StylesInterface
 	/**
 	 * Apply the defined styles to the given text or the text set in the constructor.
 	 *
-	 * @param string|null $text  The text to apply styles to. If null, uses the text set in the constructor.
-	 *
+	 * @param string|null $text The text to apply styles to. If null, uses the text set in the constructor.
+	 * @param bool $reset Whether to reset the style for next use.
 	 * @return string
 	 */
-	public function apply(?string $text = null): string
+	public function apply(?string $text = null, bool $reset = false): string
 	{
 		$this->text = $text ?? $this->text;
 		$this->applyPaddings();
 
-		return $this->startStyle() . $this->text . $this->endStyle();
+		$stylized = $this->startStyle() . $this->text . $this->endStyle();
+
+		if ($reset === true) {
+			$this->reset();
+		}
+
+		return $stylized;
 	}
 
 	/**
@@ -124,7 +121,7 @@ class Styles implements StylesInterface
 	 */
 	private function startStyle(): string
 	{
-		$styles = array_merge($this->styles, $this->colors);
+		$styles = array_merge($this->formats, $this->colors);
 		$styles = implode(';', $styles);
 
 		return self::ESC . self::START . $styles . self::END;
