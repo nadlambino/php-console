@@ -121,7 +121,7 @@ trait Spacing
 	 *
 	 * @return static Returns an instance of the class for method chaining.
 	 */
-	public function applyPaddings(): static
+	protected function applyPaddings(): static
 	{
 		extract($this->paddings);
 

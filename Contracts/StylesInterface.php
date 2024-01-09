@@ -9,7 +9,7 @@ namespace Inspira\Console\Contracts;
  *
  * Interface defining methods for representing text styles and colors using ANSI escape codes.
  */
-interface StylesInterface
+interface StylesInterface extends FormatInterface, SpacingInterface, ColorableInterface
 {
 	/**
 	 * Reset all styles and colors.
