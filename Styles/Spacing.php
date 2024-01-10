@@ -128,13 +128,13 @@ trait Spacing
 		$text = $this->text;
 
 		// Apply left padding
-		$text = str_pad($text, strlen($text) + $left, ' ', STR_PAD_LEFT);
+		$text = str_pad($text, strlen_ansi_escaped($text) + $left, ' ', STR_PAD_LEFT);
 
 		// Apply right padding. Append a non-zero space in the end to avoid spaces being trimmed out
-		$padded = str_pad($text, strlen($text) + $right, ' ', STR_PAD_RIGHT);
+		$padded = str_pad($text, strlen_ansi_escaped($text) + $right, ' ', STR_PAD_RIGHT);
 
 		// Create top padding
-		$textLength = strlen($padded);
+		$textLength = strlen_ansi_escaped($padded);
 		$topLine = str_repeat(" ", $textLength) . PHP_EOL;
 		$topPadding = str_repeat($topLine, $top);
 
