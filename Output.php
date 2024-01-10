@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inspira\Console;
 
 use Inspira\Console\Components\Table;
+use Inspira\Console\Contracts\OutputInterface;
 use Inspira\Console\Contracts\StylesInterface;
 use Inspira\Console\Enums\Color;
 use Inspira\Console\Styles\Styles;
@@ -16,7 +17,7 @@ use Inspira\Console\Styles\Styles;
  *
  * @package Inspira\Console
  */
-class Output
+class Output implements OutputInterface
 {
 	/**
 	 * Clear screen and cursor reposition ANSI codes.
@@ -41,12 +42,7 @@ class Output
 	}
 
 	/**
-	 * Display a success message with optional exit.
-	 *
-	 * @param string $message The success message.
-	 * @param bool $exit Whether to exit after displaying the message.
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function success(string $message, bool $exit = true): void
 	{
@@ -59,12 +55,7 @@ class Output
 	}
 
 	/**
-	 * Display an info message with optional exit.
-	 *
-	 * @param string $message The info message.
-	 * @param bool $exit Whether to exit after displaying the message.
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function info(string $message, bool $exit = true): void
 	{
@@ -77,12 +68,7 @@ class Output
 	}
 
 	/**
-	 * Display a warning message with optional exit.
-	 *
-	 * @param string $message The warning message.
-	 * @param bool $exit Whether to exit after displaying the message.
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function warning(string $message, bool $exit = true): void
 	{
@@ -95,12 +81,7 @@ class Output
 	}
 
 	/**
-	 * Display an error message with optional exit.
-	 *
-	 * @param string $message The error message.
-	 * @param bool $exit Whether to exit after displaying the message.
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function error(string $message, bool $exit = true): void
 	{
@@ -113,11 +94,7 @@ class Output
 	}
 
 	/**
-	 * Write text to the output stream.
-	 *
-	 * @param string $text The text to be written.
-	 *
-	 * @return $this
+	 * {@inheritdoc}
 	 */
 	public function write(string $text): self
 	{
@@ -127,11 +104,7 @@ class Output
 	}
 
 	/**
-	 * Write a line of text to the output stream with a newline character.
-	 *
-	 * @param string $text The text to be written.
-	 *
-	 * @return static
+	 * {@inheritdoc}
 	 */
 	public function writeln(string $text): static
 	{
@@ -141,11 +114,9 @@ class Output
 	}
 
 	/**
-	 * Write a newline character to the output stream.
-	 *
-	 * @return $this
+	 * {@inheritdoc}
 	 */
-	public function eol(): self
+	public function newln(): self
 	{
 		fwrite($this->stream, PHP_EOL);
 
@@ -153,9 +124,7 @@ class Output
 	}
 
 	/**
-	 * Clear the console screen and reposition the cursor to top left.
-	 *
-	 * @return static
+	 * {@inheritdoc}
 	 */
 	public function clear(): static
 	{
@@ -165,12 +134,7 @@ class Output
 	}
 
 	/**
-	 * Apply ANSI color to a message.
-	 *
-	 * @param string $message The message to colorize.
-	 * @param Color|int|array $color The ANSI color code.
-	 * @param bool $isBright Whether to use ANSI bright color.
-	 * @return string The colorized message.
+	 * {@inheritdoc}
 	 */
 	public function colorize(string $message, Color|int|array $color, bool $isBright = false): string
 	{
@@ -178,16 +142,7 @@ class Output
 	}
 
 	/**
-	 * Display a table in the console.
-	 *
-	 * This method creates a new Table instance, initializes it with the provided data and padding,
-	 * and then renders the table to the console using the render method of the Table class.
-	 *
-	 * @param array $data The tabular data to be displayed in the table.
-	 * @param string $caption The table caption.
-	 * @param int $padding The padding to be applied to each column in the table. Defaults to 3.
-	 * @param int $headerPadding The padding to be applied to each header int the table. Defaults to 4.
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function table(array $data, string $caption = '', int $padding = 3, int $headerPadding = 9): void
 	{

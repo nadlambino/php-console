@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Inspira\Console;
 
 use Closure;
-use Inspira\Console\Commands\CommandInterface;
-use Inspira\Container\Container;
-use Inspira\Container\Exceptions\NonInstantiableBindingException;
-use Inspira\Container\Exceptions\UnresolvableBindingException;
-use Inspira\Container\Exceptions\UnresolvableBuiltInTypeException;
-use Inspira\Container\Exceptions\UnresolvableMissingTypeException;
-use ReflectionClass;
+use Inspira\Console\Commands\CommandResolver;
+use Inspira\Console\Contracts\CommandRegistryInterface;
+use Inspira\Console\Contracts\InputInterface;
+use Inspira\Console\Contracts\OutputInterface;
+use JetBrains\PhpStorm\NoReturn;
+use Psr\Container\ContainerInterface;
 use Throwable;
 
 /**
@@ -26,11 +25,17 @@ class Console
 	/**
 	 * Console constructor.
 	 *
-	 * @param Container $container The container instance for dependency injection.
+	 * @param ContainerInterface $container The container instance for dependency injection.
 	 * @param Input $input The input instance for handling command input.
-	 * @param Output $output The output instance for displaying command output.
+	 * @param OutputInterface $output The output instance for displaying command output.
+	 * @param CommandRegistryInterface $commandRegistry The command registry for managing registered commands.
 	 */
-	public function __construct(public Container $container, protected Input $input, protected Output $output)
+	public function __construct(
+		protected ContainerInterface       $container,
+		protected InputInterface           $input,
+		protected OutputInterface          $output,
+		protected CommandRegistryInterface $commandRegistry,
+	)
 	{
 	}
 
@@ -42,9 +47,9 @@ class Console
 	 *
 	 * @return $this
 	 */
-	public function command(string $name, string|Closure $command): static
+	public function addCommand(string $name, string|Closure $command): static
 	{
-		$this->input->addCommand($name, $command);
+		$this->commandRegistry->addCommand($name, $command);
 
 		return $this;
 	}
@@ -65,121 +70,36 @@ class Console
 	 * Run the console application.
 	 *
 	 * @return void
-	 * @throws NonInstantiableBindingException
-	 * @throws UnresolvableBindingException
-	 * @throws UnresolvableBuiltInTypeException
-	 * @throws UnresolvableMissingTypeException
 	 */
 	public function run(): void
 	{
-		$this->validateCommand();
-		$this->input->setArguments();
-		$arguments = $this->input->getArguments();
-		$name = $this->input->getCommandName();
-		$command = $this->input->getCommands($name);
-
-		if (empty($command)) {
-			$this->output->error("Unknown command [$name]. Did you register this command?");
-		}
-
-		// This will handle commands that were registered as closure
-		// It will automatically exit the console when it is successfully run
-		$this->handleClosure($command);
-
-		// Validate required parameters for class command
-		$this->validateRequires($command, $arguments);
-
 		try {
-			// This will handle commands that were registered as class
-			$reflection = new ReflectionClass($command);
-
-			if (!$reflection->implementsInterface(CommandInterface::class)) {
-				$this->output->error(sprintf('Command must be an instance of [%s].', CommandInterface::class));
+			if (!$this->input->hasCommand()) {
+				$this->showAllDetailedCommands();
 			}
 
-			$this->container->resolve($command, 'run');
+			(new CommandResolver($this->container, $this->commandRegistry, $this->input))->resolve();
 		} catch (Throwable $exception) {
 			$this->output->error($exception->getMessage());
 		}
 	}
 
 	/**
-	 * Handle closure or callable commands.
-	 *
-	 * @param Closure|string $class The closure or callable class representing the command.
-	 * @return void
-	 * @throws NonInstantiableBindingException
-	 * @throws UnresolvableBindingException
-	 * @throws UnresolvableBuiltInTypeException
-	 * @throws UnresolvableMissingTypeException
-	 */
-	private function handleClosure(Closure|string $class): void
-	{
-		if ($class instanceof Closure || is_callable($class)) {
-			$this->container->resolve($class);
-			exit(0);
-		}
-	}
-
-	/**
-	 * Get an array of all available commands.
-	 *
-	 * @return array
-	 */
-	private function getAllAvailableCommands(): array
-	{
-		foreach ($this->input->getCommands() as $name => $implementation) {
-			$command['command'] = $name;
-			$command = array_merge($command, $this->input->getCommandProperties($implementation));
-			$commands[] = $command;
-		}
-
-		$commands = $commands ?? [];
-		sort($commands);
-
-		return $commands;
-	}
-
-	/**
-	 * Validate if a command is specified; if not, display available commands.
+	 * Show all available commands in detailed form.
 	 *
 	 * @return void
 	 */
-	private function validateCommand(): void
+	#[NoReturn]
+	protected function showAllDetailedCommands(): void
 	{
-		if (is_null($this->input->getCommandName())) {
-			if (empty($commands = $this->getAllAvailableCommands())) {
-				$this->output->warning("No available commands.");
-			}
+		$commands = $this->commandRegistry->getDetailedCommands();
 
-			$this->output->table($commands, "Available Commands");
-			exit(0);
+		if (empty($commands)) {
+			$this->output->info("No available commands.");
 		}
-	}
 
-	/**
-	 * Validate required parameters for a class command.
-	 *
-	 * @param string $command The class name of the command.
-	 * @param array $parameters The array of command parameters.
-	 *
-	 * @return void
-	 */
-	private function validateRequires(string $command, array $parameters): void
-	{
-		try {
-			$reflection = new ReflectionClass($command);
-			$properties = $reflection->getProperty('requires');
-			$requires = $properties->getDefaultValue() ?? [];
-			$parameterNames = array_keys($parameters);
+		$this->output->table($commands, "Available Commands");
 
-			if (!empty($requires) && $missing = array_diff($requires, $parameterNames)) {
-				$names = trimplode(', ', array_map(fn($values) => '"' . $values . '"', $missing));
-				$label = count($missing) <= 1 ? 'parameter' : 'parameters';
-				$this->output->error("Missing required $label: [$names]");
-			}
-		} catch (Throwable $exception) {
-			$this->output->error($exception->getMessage());
-		}
+		exit(0);
 	}
 }

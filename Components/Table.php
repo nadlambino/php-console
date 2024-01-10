@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Inspira\Console\Components;
 
 use Inspira\Console\Contracts\ComponentInterface;
+use Inspira\Console\Contracts\OutputInterface;
 use Inspira\Console\Enums\Color;
-use Inspira\Console\Output;
 
 /**
  * Class Table
@@ -45,16 +45,16 @@ class Table implements ComponentInterface
 	/**
 	 * Table constructor.
 	 *
-	 * @param Output $output The output instance for writing to the console.
+	 * @param OutputInterface $output The output instance for writing to the console.
 	 * @param array $data The tabular data to be displayed in the table.
 	 * @param int $padding The padding to be applied to each column in the table.
 	 * @param int $headerPadding The padding to be applied in headers.
 	 */
 	public function __construct(
-		protected Output $output,
-		protected array  $data,
-		protected int    $padding = 3,
-		protected int    $headerPadding = 9
+		protected OutputInterface $output,
+		protected array           $data,
+		protected int             $padding = 3,
+		protected int             $headerPadding = 9
 	)
 	{
 		$this->prependHeaders($this->getHeaders())
@@ -205,7 +205,7 @@ class Table implements ComponentInterface
 			$text = str_pad($coloredColumn, $width);
 			$this->output->write($text);
 		}
-		$this->output->eol();
+		$this->output->newln();
 
 		return $this;
 	}
@@ -222,7 +222,7 @@ class Table implements ComponentInterface
 				$text = str_pad($value, $this->columnWidths[$column]);
 				$this->output->write($text);
 			}
-			$this->output->eol();
+			$this->output->newln();
 		}
 
 		return $this;

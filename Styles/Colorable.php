@@ -26,11 +26,7 @@ trait Colorable
 	protected array $colors = [];
 
 	/**
-	 * Set the foreground color using the specified color and brightness.
-	 *
-	 * @param Color $color  The foreground color enumeration.
-	 * @param bool $isBright Whether to use the bright color.
-	 * @return static  Returns the current instance for method chaining.
+	 * {@inheritdoc}
 	 */
 	public function fgColor(Color $color, bool $isBright = false): static
 	{
@@ -40,11 +36,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the foreground color using a custom color from the palette.
-	 *
-	 * @param int $color  The color code between 0 - 255.
-	 * @return static  Returns the current instance for method chaining.
-	 *
+	 * {@inheritdoc}
 	 * @link https://en.wikipedia.org/wiki/ANSI_escape_code
 	 */
 	public function fgPalette(int $color): static
@@ -55,13 +47,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the foreground color using RGB components.
-	 *
-	 * @param int $red  Red component (between 0 - 255).
-	 * @param int $green  Green component (between 0 - 255).
-	 * @param int $blue  Blue component (between 0 - 255).
-	 * @return static  Returns the current instance for method chaining.
-	 *
+	 * {@inheritdoc}
 	 * @link https://en.wikipedia.org/wiki/ANSI_escape_code
 	 */
 	public function fgRgb(int $red, int $green, int $blue): static
@@ -72,11 +58,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the foreground color based on different color representations.
-	 *
-	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
-	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
-	 * @return static
+	 * {@inheritdoc}
 	 */
 	public function fgColorize(Color|int|array $color, bool $isBright = false): static
 	{
@@ -96,11 +78,19 @@ trait Colorable
 	}
 
 	/**
-	 * Set the background color using the specified color and brightness.
+	 * Method alias for fgColorize.
 	 *
-	 * @param Color $color  The background color enumeration.
-	 * @param bool $isBright Whether to use the bright color.
-	 * @return static  Returns the current instance for method chaining.
+	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
+	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
+	 * @return static
+	 */
+	public function color(Color|int|array $color, bool $isBright = false): static
+	{
+		return $this->fgColorize($color, $isBright);
+	}
+
+	/**
+	 * {@inheritdoc}
 	 */
 	public function bgColor(Color $color, bool $isBright = false): static
 	{
@@ -110,10 +100,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the background color using a custom color from the palette.
-	 *
-	 * @param int $color  The color code between 0 - 255.
-	 * @return static  Returns the current instance for method chaining.
+	 * {@inheritdoc}
 	 */
 	public function bgPalette(int $color): static
 	{
@@ -123,12 +110,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the background color using RGB components.
-	 *
-	 * @param int $red  Red component (between 0 - 255).
-	 * @param int $green  Green component (between 0 - 255).
-	 * @param int $blue  Blue component (between 0 - 255).
-	 * @return static  Returns the current instance for method chaining.
+	 * {@inheritdoc}
 	 */
 	public function bgRgb(int $red, int $green, int $blue): static
 	{
@@ -138,11 +120,7 @@ trait Colorable
 	}
 
 	/**
-	 * Set the background color based on different color representations.
-	 *
-	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
-	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
-	 * @return static
+	 * {@inheritdoc}
 	 */
 	public function bgColorize(Color|int|array $color, bool $isBright = false): static
 	{
@@ -159,6 +137,18 @@ trait Colorable
 		}
 
 		return $this->bgRgb(...$color);
+	}
+
+	/**
+	 * Method alias for bgColorize.
+	 *
+	 * @param Color|int|array $color The color to set. It can be an instance of Color, an integer (ANSI 256 color code), or an array of RGB values.
+	 * @param bool $isBright Whether the color should be bright or not (applies to Color instance only).
+	 * @return static
+	 */
+	public function paint(Color|int|array $color, bool $isBright = false): static
+	{
+		return $this->bgColorize($color, $isBright);
 	}
 
 	/**

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Inspira\Console\Commands;
 
-use Inspira\Console\Input;
-use Inspira\Console\Output;
+use Inspira\Console\Contracts\InputInterface;
+use Inspira\Console\Contracts\OutputInterface;
 
 /**
  * Class Command
@@ -34,10 +34,10 @@ abstract class Command implements CommandInterface
 	/**
 	 * Command constructor.
 	 *
-	 * @param Input $input The input instance for handling command input.
-	 * @param Output $output The output instance for displaying command output.
+	 * @param InputInterface $input The input instance for handling command input.
+	 * @param OutputInterface $output The output instance for displaying command output.
 	 */
-	public function __construct(protected Input $input, protected Output $output)
+	public function __construct(protected InputInterface $input, protected OutputInterface $output)
 	{
 	}
 }
