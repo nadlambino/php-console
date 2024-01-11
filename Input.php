@@ -33,7 +33,7 @@ class Input implements InputInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getArgument(string $name, mixed $default): mixed
+	public function getArgument(string $name, mixed $default = null): mixed
 	{
 		$this->extractArguments();
 

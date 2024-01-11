@@ -29,7 +29,7 @@ interface InputInterface
 	 *
 	 * @return mixed The array of arguments or a specific argument.
 	 */
-	public function getArgument(string $name, mixed $default): mixed;
+	public function getArgument(string $name, mixed $default = null): mixed;
 
 	/**
 	 * Get the name of the command that is being run.
