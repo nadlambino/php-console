@@ -5,10 +5,10 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Inspira\\Console\\": "."
+            "Inspira\\Console\\": "src"
         },
         "files": [
-            "functions.php"
+          "src/functions.php"
         ]
     },
     "authors": [
