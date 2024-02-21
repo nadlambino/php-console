@@ -98,7 +98,7 @@ class Console
 			$this->output->info("No available commands.");
 		}
 
-		$this->output->table($commands, "Available Commands");
+		$this->output->table($commands, "Available Commands", 7);
 
 		exit(0);
 	}
