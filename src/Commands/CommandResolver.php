@@ -15,6 +15,7 @@ use Inspira\Console\Input;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Throwable;
+use function Inspira\Utils\trimplode;
 
 /**
  * Class CommandResolver

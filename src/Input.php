@@ -23,7 +23,7 @@ class Input implements InputInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getArguments(): mixed
+	public function getArguments(): array
 	{
 		$this->extractArguments();
 

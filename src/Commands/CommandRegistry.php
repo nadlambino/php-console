@@ -9,6 +9,7 @@ use Inspira\Console\Contracts\CommandRegistryInterface;
 use Inspira\Console\Exceptions\DuplicateCommandException;
 use ReflectionClass;
 use Throwable;
+use function Inspira\Utils\trimplode;
 
 /**
  * Class CommandRegistry
