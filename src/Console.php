@@ -25,7 +25,7 @@ class Console
      * Console constructor.
      *
      * @param ContainerInterface       $container The container instance for dependency injection.
-     * @param Input                    $input     The input instance for handling command input.
+     * @param InputInterface           $input     The input instance for handling command input.
      * @param OutputInterface          $output    The output instance for displaying command output.
      * @param CommandRegistryInterface $registry  The command registry for managing registered commands.
      */
