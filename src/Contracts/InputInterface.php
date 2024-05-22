@@ -14,22 +14,28 @@ namespace Inspira\Console\Contracts;
 interface InputInterface
 {
 	/**
-	 * Get all the arguments from the command that is being run.
+	 * Get all the options from the command that is being run.
 	 *
-	 * @return mixed The array of arguments or a specific argument.
+	 * @return array The array of options.
 	 */
-	public function getArguments(): mixed;
-
+	public function getOptions(): array;
 
 	/**
-	 * Get the value of the given argument from the command that is being run.
+	 * Get a specific option from the command that is being run.
 	 *
-	 * @param string $name The name of the argument.
-	 * @param mixed $default The default value if the argument is not found.
-	 *
-	 * @return mixed The array of arguments or a specific argument.
+	 * @param string $name The name of the option.
+	 * @param mixed $default The default value of the option.
+	 * 
+	 * @return mixed The value of specific option.
 	 */
-	public function getArgument(string $name, mixed $default = null): mixed;
+	public function getOption(string $name, mixed $default = null): mixed;
+
+	/**
+	 * Get the argument from the command that is being run.
+	 *
+	 * @return mixed The value of the argument.
+	 */
+	public function getArgument(): mixed;
 
 	/**
 	 * Get the name of the command that is being run.

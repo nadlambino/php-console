@@ -16,28 +16,40 @@ use Inspira\Console\Contracts\InputInterface;
 class Input implements InputInterface
 {
 	/**
-	 * @var array The command line arguments.
+	 * @var string|null The command line argument.
 	 */
-	protected array $arguments = [];
+	protected ?string $argument = null;
 
 	/**
-	 * {@inheritdoc}
+	 * @var array The command line options.
 	 */
-	public function getArguments(): array
-	{
-		$this->extractArguments();
+	protected array $options = [];
 
-		return $this->arguments;
+	public function getArgument(): ?string
+    {
+		$this->extractArgument();
+
+		return $this->argument;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getArgument(string $name, mixed $default = null): mixed
+	public function getOptions(): array
 	{
-		$this->extractArguments();
+		$this->extractOptions();
 
-		return $this->arguments[$name] ?? $default;
+		return $this->options;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getOption(string $name, mixed $default = null): mixed
+	{
+		$this->extractOptions();
+
+		return $this->options[$name] ?? $default;
 	}
 
 	/**
@@ -56,29 +68,41 @@ class Input implements InputInterface
 		return $_SERVER['argc'] >= 2;
 	}
 
+	protected function extractArgument() : void
+    {
+		if (! empty($this->argument)) {
+			return;
+		}
+
+		$arguments = array_slice($_SERVER['argv'], 2);
+		$argument = $arguments[0] ?? '';
+
+		if (! str_starts_with($argument, '-')) {
+			$this->argument = array_shift($arguments);
+		}
+	}
+
 	/**
 	 * Extract the arguments from the console.
 	 *
 	 * @return void
 	 */
-	protected function extractArguments(): void
+	protected function extractOptions(): void
 	{
-		if (!empty($this->arguments)) {
-			return;
-		}
+        if (! empty($this->options)) {
+            return;
+        }
 
-		$arguments = array_splice($_SERVER['argv'], 2);
+		$args = array_slice($_SERVER['argv'], 2);
 
-		foreach ($arguments as $argument) {
-			if (!str_starts_with($argument, '-')) {
+		foreach ($args as $arg) {
+			if (! str_starts_with($arg, '-')) {
 				continue;
 			}
 
-			$options = explode('=', $argument);
-			$name = preg_replace('/^(--|-)/', '', $options[0], 1);
-			$params[$name] = $options[1] ?? true;
+			$arguments = explode('=', $arg);
+			$name = preg_replace('/^(--|-)/', '', $arguments[0], 1);
+			$this->options[$name] = $arguments[1] ?? true;
 		}
-
-		$this->arguments = $params ?? [];
 	}
 }

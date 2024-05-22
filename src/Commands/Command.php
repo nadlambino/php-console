@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspira\Console\Commands;
 
+use Inspira\Console\Contracts\CommandInterface;
 use Inspira\Console\Contracts\InputInterface;
 use Inspira\Console\Contracts\OutputInterface;
 
@@ -22,14 +23,14 @@ abstract class Command implements CommandInterface
 	protected string $description = '';
 
 	/**
-	 * @var array The required parameters for the command.
+	 * @var ?string The argument for the command.
 	 */
-	protected array $requires = [];
+	protected ?string $argument = null;
 
 	/**
-	 * @var array The optional parameters for the command.
+	 * @var array The options for the command.
 	 */
-	protected array $optionals = [];
+	protected array $options = [];
 
 	/**
 	 * Command constructor.

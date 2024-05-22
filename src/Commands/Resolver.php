@@ -7,8 +7,8 @@ namespace Inspira\Console\Commands;
 use Closure;
 use Inspira\Console\Contracts\CommandRegistryInterface;
 use Inspira\Console\Contracts\CommandResolverInterface;
-use Inspira\Console\Exceptions\MissingCommandException;
 use Inspira\Console\Exceptions\MissingArgumentException;
+use Inspira\Console\Exceptions\MissingCommandException;
 use Inspira\Console\Exceptions\UnregisteredCommandException;
 use Inspira\Console\Exceptions\UnresolvableCommandException;
 use Inspira\Console\Input;
@@ -18,13 +18,13 @@ use Throwable;
 use function Inspira\Utils\trimplode;
 
 /**
- * Class CommandResolver
+ * Class Resolver
  *
  * Resolves and executes console commands.
  *
  * @package Inspira\Console\Commands
  */
-class CommandResolver implements CommandResolverInterface
+class Resolver implements CommandResolverInterface
 {
 	/**
 	 * The name of the command.
@@ -41,7 +41,7 @@ class CommandResolver implements CommandResolverInterface
 	protected Closure|string $command;
 
 	/**
-	 * CommandResolver constructor.
+	 * Resolver constructor.
 	 *
 	 * @param ContainerInterface $container The container instance for dependency injection.
 	 * @param CommandRegistryInterface $commandRegistry The command registry for managing registered commands.
@@ -66,10 +66,10 @@ class CommandResolver implements CommandResolverInterface
 	{
 		if ($this->command instanceof Closure || is_callable($this->command)) {
 			$this->container->resolve($this->command);
-			exit(0);
+			return;
 		}
 
-		$this->validateArguments();
+		$this->validateArgument();
 
 		// Resolve the command's 'run' method.
 		$this->container->resolve($this->command, 'run');
@@ -80,25 +80,22 @@ class CommandResolver implements CommandResolverInterface
 	 *
 	 * @throws UnresolvableCommandException
 	 */
-	protected function validateArguments(): void
+	protected function validateArgument(): void
 	{
 		try {
 			$reflection = new ReflectionClass($this->command);
-			$properties = $reflection->getProperty('requires');
-			$requires = $properties->getDefaultValue() ?? [];
-			$parameterNames = array_keys($this->input->getArguments());
+			$properties = $reflection->getProperty('argument');
+			$argument = $properties->getDefaultValue() ?? null;
 
-			if (!empty($requires) && $missing = array_diff($requires, $parameterNames)) {
-				$names = trimplode(', ', array_map(fn($values) => '"' . $values . '"', $missing));
-				$label = count($missing) <= 1 ? 'parameter' : 'parameters';
-				throw new MissingArgumentException("Missing required $label: [$names]");
-			}
+            if (! empty($argument) && empty($this->input->getArgument())) {
+                throw new MissingArgumentException("Missing argument [$argument] for [$this->name] command.");
+            }
 		} catch (Throwable $exception) {
 			if ($exception instanceof MissingArgumentException) {
 				throw $exception;
 			}
 
-			throw new UnresolvableCommandException("Unable to resolve [$this->name] command.");
+			throw new UnresolvableCommandException("Unable to resolve command [$this->name].");
 		}
 	}
 
